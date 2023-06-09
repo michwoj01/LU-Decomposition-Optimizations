@@ -1,6 +1,6 @@
 /* Create macros so that the matrices are stored in column-major order */
-#include <math.h>
 #define A(i, j) a[(i)*n + (j)]
+#define abs(x) ((x) < 0 ? (-x) : (x))
 
 /* Routine for computing C = A * B + C */
 
@@ -17,11 +17,11 @@ int MY_MMult(double *a, int n, double Tol, int *P)
     maxA = 0.0;
     imax = i;
 
-    for (k = i; k < n; k++)
-      if ((absA = fabs(A(k, i))) > maxA)
+    for (j = i; j < n; j++)
+      if ((absA = abs(A(j, i))) > maxA)
       {
         maxA = absA;
-        imax = k;
+        imax = j;
       }
 
     if (maxA < Tol)

@@ -1,2 +1,5 @@
 output*
 compare*
+octave-workspace
+*.o
+*.x

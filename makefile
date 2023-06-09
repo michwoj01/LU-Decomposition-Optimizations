@@ -1,12 +1,12 @@
-OLD  := MMult0
-NEW  := MMult0
+OLD  := MMult3
+NEW  := MMult4
 #
 # sample makefile
 #
 
 CC         := gcc
 LINKER     := $(CC)
-CFLAGS     := -O2 -Wall -msse3
+CFLAGS     := -O2 -Wall -msse3 -mavx
 LDFLAGS    := -lm
 
 TEST_OBJS  := test_MMult.o $(NEW).o 

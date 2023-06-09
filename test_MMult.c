@@ -3,7 +3,6 @@
 #include "parameters.h"
 #include <sys/time.h>
 #include <time.h>
-#include <math.h>
 
 #define A(i, j) a[(i)*n + (j)]
 #define B(i, j) b[(i)*n + (j)]
@@ -25,7 +24,7 @@ int LUPDecompose(double *a, int n, double Tol, int *P)
     imax = i;
 
     for (k = i; k < n; k++)
-      if ((absA = fabs(A(k, i))) > maxA)
+      if ((absA = abs(A(k, i))) > maxA)
       {
         maxA = absA;
         imax = k;
@@ -142,15 +141,11 @@ int main()
 
     gflops = 2.0 * p * p * p * 1.0e-09;
 
-    /* Allocate space for the matrices */
-    /* Note: I create an extra column in A to make sure that
-       prefetching beyond the matrix does not cause a segfault */
     a = (double *)malloc(p * p * sizeof(double));
     aold = (double *)malloc(p * p * sizeof(double));
     aref = (double *)malloc(p * p * sizeof(double));
     b = (int *)malloc((p + 1) * sizeof(int));
 
-    /* Generate random matrices Aold  */
     random_matrix(p, aold);
 
     copy_matrix(p, aold, aref);
@@ -163,14 +158,10 @@ int main()
 
     original = check(p, aref);
 
-    /* Run the reference implementation so the answers can be compared */
-
-    /* Time the "optimized" implementation */
     for (rep = 0; rep < NREPEATS; rep++)
     {
       copy_matrix(p, aold, a);
 
-      /* Time your implementation */
       dtime = dclock();
 
       if (MY_MMult(a, p, 0.0, b) != 1)
