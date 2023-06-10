@@ -6,10 +6,10 @@
 
 int MY_MMult(double *a, int n, double Tol, int *P)
 {
-    register int i, j, k, imax;
+    register unsigned i, j, k, imax;
     register double maxA, absA, multiplier, divider, temp;
-    register __m512d devider;
-    register __m512d tmp0, tmp1;
+    register __m256d devider;
+    register __m256d tmp0, tmp1, tmp4, tmp5;
 
     for (i = 0; i <= n; i++)
         P[i] = i;
@@ -53,24 +53,25 @@ int MY_MMult(double *a, int n, double Tol, int *P)
             devider[1] = divider;
             devider[2] = divider;
             devider[3] = divider;
-            devider[4] = divider;
-            devider[5] = divider;
-            devider[6] = divider;
-            devider[7] = divider;
 
             for (k = i + 1; k < n;)
             {
                 if (k < MAX(n - 8, 0))
                 {
-                    tmp0 = _mm512_loadu_pd(a + IDX(j, k));
+                    tmp0 = _mm256_loadu_pd(a + IDX(j, k));
+                    tmp4 = _mm256_loadu_pd(a + IDX(j, k + 4));
 
-                    tmp1 = _mm512_loadu_pd(a + IDX(i, k));
+                    tmp1 = _mm256_loadu_pd(a + IDX(i, k));
+                    tmp5 = _mm256_loadu_pd(a + IDX(i, k + 4));
 
-                    tmp1 = _mm512_mul_pd(tmp1, devider);
+                    tmp1 = _mm256_mul_pd(tmp1, devider);
+                    tmp5 = _mm256_mul_pd(tmp5, devider);
 
-                    tmp0 = _mm512_sub_pd(tmp0, tmp1);
+                    tmp0 = _mm256_sub_pd(tmp0, tmp1);
+                    tmp4 = _mm256_sub_pd(tmp4, tmp5);
 
-                    _mm512_storeu_pd(a + IDX(j, k), tmp0);
+                    _mm256_storeu_pd(a + IDX(j, k), tmp0);
+                    _mm256_storeu_pd(a + IDX(j, k + 4), tmp4);
                     
                     k += 8;
                 }

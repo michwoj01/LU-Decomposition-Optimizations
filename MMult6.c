@@ -57,7 +57,6 @@ int MY_MMult(double *a, int n, double Tol, int *P)
             devider[1] = divider;
             devider[2] = divider;
             devider[3] = divider;
-
             for (k = i + 1; k < n;)
             {
                 if (k < MAX(n - 8, 0))
